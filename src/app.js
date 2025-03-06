@@ -1,5 +1,5 @@
 const express = require('express');
-const connectDB = require('./src/config/db.config');
+const connectDB = require('../src/config/db.config');
 const movieRoutes = require('./routes/movies.routes');
 const showtimeRoutes = require('./routes/showtimes.routes');
 const bookingRoutes = require('./routes/bookings.routes');
