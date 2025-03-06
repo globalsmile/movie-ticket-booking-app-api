@@ -7,6 +7,17 @@ const path = require('path');
 
 jest.setTimeout(10000); // Increase to 10 seconds
 
+// Mock Cloudinary so that file uploads don’t call the real API
+jest.mock('../src/utils/cloudinary', () => ({
+  uploader: {
+    upload: jest.fn(() =>
+      Promise.resolve({
+        secure_url: 'http://example.com/mock_test_image.jpg'
+      })
+    )
+  }
+}));
+
 describe('Movie Endpoints', () => {
   // GET /api/movies should return an empty array initially
   it('GET /api/movies - should return empty movies list', async () => {
@@ -97,7 +108,7 @@ describe('Movie Endpoints', () => {
       .field('title', testMovieData.title)
       .field('description', testMovieData.description)
       .field('releaseDate', testMovieData.releaseDate)
-      .attach('poster', path.join(__dirname, 'test-files', 'test_image.jpg'));
+      .attach('poster', path.join(__dirname, 'test-files', '17.png'));
 
     // If Cloudinary is not mocked, you might want to skip or mock the external upload.
     // Otherwise, check for a successful response.

@@ -1,0 +1,21 @@
+PASS __tests__/booking.test.js
+  ● Console
+
+    console.log
+      [Test Mode] Dummy email sent for booking: new ObjectId('67c9976a093f004875711e60')
+
+      at log (src/utils/mailgun.js:8:15)
+
+    console.log
+      [Test Mode] Dummy email sent for booking: new ObjectId('67c9976a093f004875711e6d')
+
+      at log (src/utils/mailgun.js:8:15)
+
+
+PASS __tests__/showtime.test.js
+
+Test Suites: 3 passed, 3 total
+Tests:       10 passed, 10 total
+Snapshots:   0 total
+Time:        4.104 s, estimated 5 s
+Ran all test suites.
