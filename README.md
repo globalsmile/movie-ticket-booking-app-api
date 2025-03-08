@@ -149,11 +149,11 @@ npm run dev
 The API will be available at http://localhost:5000.
 
 ## **API Endpoints**
-- Movies
-  - GET /api/movies – Retrieve all movies.
+- **Movies**
+- **GET /api/movies** – Retrieve all movies.
 
-  - Example responses:
-      - Success
+- Example responses:
+- Success: Movies Retrieved
  ```json
 {
   "status_code": 200,
@@ -177,59 +177,271 @@ The API will be available at http://localhost:5000.
     ]
   }
 ```
-- Failed
+- Failure: Internal Server Error
+```json
+{
+  "status_code": 500,
+  "message": "Internal Server Error",
+  "data": {}
+}
+```
     
-  - **Login:** POST /api/auth/login
- 
-  ![advanced-user-login-instructor](https://github.com/user-attachments/assets/7d0f7d6a-dd5e-4816-9622-37fb5074f99f)
-  ![advanced-user-login-stu](https://github.com/user-attachments/assets/b8163a46-50e9-4eb4-a621-698f77287a9f)
+- **GET /api/movies/:id** – Get details for a specific movie.
+- Example responses:
+- Success: Movies Details Retrieved
+ ```json
+{
+  "status_code": 200,
+  "message": "Movie details retrieved successfully",
+  "data": {
+    "movie": {
+      "_id": "60d21b4667d0d8992e610c85",
+      "title": "Inception",
+      "description": "A mind-bending thriller by Christopher Nolan.",
+      "posterUrl": "https://res.cloudinary.com/your-cloud-name/image/upload/inception.jpg",
+      "releaseDate": "2010-07-16T00:00:00.000Z"
+    }
+  }
+}
+```
+- Failure: Movie not found
+```json
+{
+  "status_code": 404,
+  "message": "Movie not found",
+  "data": {}
+}
+```
 
-  - **Forgot Password:** POST /api/auth/forgot-password
-  
-  ![advanced-user-forgot-pass-instructor](https://github.com/user-attachments/assets/373cc6d7-2317-42fa-a434-6026474342dc)
-  ![advanced-user-forgot-pass-stu](https://github.com/user-attachments/assets/933cbd6f-b292-4f9f-b854-5c28be0b3436)
-  
-  - **Reset Password:** POST /api/auth/reset-password/:resetToken
- 
-  ![user-reset-password](https://github.com/user-attachments/assets/74fe79a9-114f-46dc-adae-5e47f20e1fbc)
+- **GET /api/movies/search?query=XYZ** – Search movies by title.
+- Example responses:
+- Success: Search results
+ ```json
+{
+  "status_code": 200,
+  "message": "Search results",
+  "data": {
+    "movies": [
+      {
+        "_id": "60d21b4667d0d8992e610c85",
+        "title": "Test Movie",
+        "description": "A movie for testing",
+        "posterUrl": "https://res.cloudinary.com/your-cloud-name/image/upload/test.jpg",
+        "releaseDate": "2025-01-01T00:00:00.000Z"
+      }
+    ]
+  }
+}
+```
+- Failure: No search query
+```json
+{
+  "status_code": 400,
+  "message": "Search query is required",
+  "data": {}
+}
+```
 
-  - **Change Password:** POST /api/auth/change-password
+- **GET /api/movies/now-playing** – Movies currently playing.
+- Example responses:
+- Success: Now playing movies
+ ```json
+{
+  "status_code": 200,
+  "message": "Now playing movies",
+  "data": {
+    "movies": [
+      {
+        "_id": "60d21b4767d0d8992e610c87",
+        "title": "Now Playing Movie",
+        "description": "A currently showing movie.",
+        "posterUrl": "https://res.cloudinary.com/your-cloud-name/image/upload/nowplaying.jpg",
+        "releaseDate": "2020-01-01T00:00:00.000Z"
+      }
+    ]
+  }
+}
+```
 
-  ![user-change-password-stu](https://github.com/user-attachments/assets/4f923bb5-4498-4023-bbfc-5a411f17acc3)
+- **GET /api/movies/coming-soon** – Upcoming movies.
+- Example responses:
+- Success: Coming soon movies
+ ```json
+{
+  "status_code": 200,
+  "message": "Coming soon movies",
+  "data": {
+    "movies": [
+      {
+        "_id": "60d21b4867d0d8992e610c88",
+        "title": "Coming Soon Movie",
+        "description": "A movie that will be released soon.",
+        "posterUrl": "https://res.cloudinary.com/your-cloud-name/image/upload/comingsoon.jpg",
+        "releaseDate": "2099-01-01T00:00:00.000Z"
+      }
+    ]
+  }
+}
+```
 
--  Courses
-  - **Create Course (Instructor Only):** POST /api/courses
+- **GET /api/movies/:id/showtimes** – Showtimes for a given movie.
+- Example responses:
+- Success: Showtimes retrieved
+ ```json
+{
+  "status_code": 200,
+  "message": "Showtimes retrieved",
+  "data": {
+    "showtimes": [
+      {
+        "_id": "60d21b4967d0d8992e610c90",
+        "date": "2025-01-02T18:00:00.000Z"
+      },
+      {
+        "_id": "60d21b4a67d0d8992e610c91",
+        "date": "2025-01-03T20:00:00.000Z"
+      }
+    ]
+  }
+}
+```
 
-  ![user-create-course](https://github.com/user-attachments/assets/5d64f1bc-0484-40b7-8096-f2c40c3b93ed)
-  
-  - **Get All Courses:** GET /api/courses
+- **POST /api/movies/upload** – Upload a new movie with a poster image.
+- Example responses:
+- Success: Movie uploaded
+ ```json
+curl --location 'https://movie-ticket-booking-app-api.onrender.com/api/movies/upload' \
+--header 'Content-Type: multipart/form-data' \
+--form 'title="Test Upload Movie"' \
+--form 'description="Movie uploaded via Postman"' \
+--form 'releaseDate="2025-01-01"' \
+--form 'poster=@"/path/to/your/test_image.jpg"'
+```
+- Failure: Poster missing
+```json
+curl --location 'https://movie-ticket-booking-app-api.onrender.com/api/movies/upload' \
+--header 'Content-Type: multipart/form-data' \
+--form 'title="Test Upload Movie"' \
+--form 'description="Movie uploaded via Postman"' \
+--form 'releaseDate="2025-01-01"'
+```
 
-  ![get all courses](https://github.com/user-attachments/assets/cd766738-8b2e-4acf-ba79-1b25df95f7ac)
+- **Showtimes/Seats**
+- **GET /api/showtimes/:showtimeId/seats** – Retrieve seat layout for a showtime.
+- Example responses:
+- Success: Seats retrieved
+ ```json
+{
+  "status_code": 200,
+  "message": "Seats retrieved",
+  "data": {
+    "seats": [
+      {
+        "_id": "60d21b4a67d0d8992e610c93",
+        "row": "A",
+        "number": 1,
+        "status": "available"
+      },
+      {
+        "_id": "60d21b4a67d0d8992e610c94",
+        "row": "A",
+        "number": 2,
+        "status": "available"
+      },
+      {
+        "_id": "60d21b4a67d0d8992e610c95",
+        "row": "A",
+        "number": 3,
+        "status": "reserved"
+      }
+    ]
+  }
+}
+```
+- Failure: Showtime not found
+```json
+{
+  "status_code": 404,
+  "message": "Showtime not found",
+  "data": {}
+}
+```
 
-  - **Update Course (Instructor Only):** PUT /api/courses/:courseId
+- **Bookings**
+- **POST /api/bookings** – Create a new booking.
+- Example responses:
+- Success: Booking created
+ ```json
+curl --location 'https://movie-ticket-booking-app-api.onrender.com/api/bookings' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "showtimeId": "60d21b4967d0d8992e610c90",
+    "userId": "testuser@example.com",
+    "seatIds": [
+        "60d21b4a67d0d8992e610c93",
+        "60d21b4a67d0d8992e610c94"
+    ]
+}'
+```
+- Failure: Seats not available
+```json
+curl --location 'https://movie-ticket-booking-app-api.onrender.com/api/bookings' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "showtimeId": "60d21b4967d0d8992e610c90",
+    "userId": "testuser@example.com",
+    "seatIds": [
+        "invalidSeatId"
+    ]
+}'
+```
 
-  ![update course](https://github.com/user-attachments/assets/9df05236-bc06-46b4-a933-a4e6e2500c26)
-
-  - **Delete Course (Instructor Only):** DELETE /api/courses/:courseId
-
-  ![delete-course](https://github.com/user-attachments/assets/eeadff63-12a2-4b02-9a30-d61b12eb0034)
-
-  - **Enroll in Course (Student Only):** POST /api/courses/:courseId/enroll
-
-  ![enroll-user](https://github.com/user-attachments/assets/43764e63-ad38-4686-a5da-55491390935a)
-
-  - **Upload Course Media (Instructor Only):** POST /api/courses/:courseId/upload
-
-  ![upload](https://github.com/user-attachments/assets/9aa6e876-2259-43fe-a0b9-c4f1984d2933)
-
-
-- Analytics
-  - **Analytics Summary:** GET /api/analytics/summary
-
-  ![enrollment](https://github.com/user-attachments/assets/2ec46238-2867-4ea8-b883-ed5ac141c668)
-
+- **GET /api/bookings/:id** – Retrieve a booking by ID.
+- Example responses:
+- Success: Booking retrieved successfully
+ ```json
+{
+  "status_code": 200,
+  "message": "Booking retrieved successfully",
+  "data": {
+    "booking": {
+      "_id": "60d21b4c67d0d8992e610c96",
+      "userId": "testuser@example.com",
+      "showtime": {
+        "_id": "60d21b4967d0d8992e610c90",
+        "date": "2025-01-02T18:00:00.000Z"
+      },
+      "seats": [
+        {
+          "_id": "60d21b4a67d0d8992e610c93",
+          "row": "B",
+          "number": 1,
+          "status": "reserved"
+        },
+        {
+          "_id": "60d21b4a67d0d8992e610c94",
+          "row": "B",
+          "number": 2,
+          "status": "reserved"
+        }
+      ],
+      "totalPrice": 30,
+      "createdAt": "2025-01-01T00:00:00.000Z"
+    }
+  }
+}
+```
+- Failure: Booking not found
+```json
+{
+  "status_code": 404,
+  "message": "Booking not found",
+  "data": {}
+}
+```
 
 Refer to the Postman Documentation for detailed request and response examples.
+
 
 ## **Third-Party Integrations**
 ### **Mailgun for Email Notifications**
@@ -251,11 +463,11 @@ Refer to the Postman Documentation for detailed request and response examples.
 
 ## **API Documentation**
 
-You can view the full API documentation here: [Advanced-E-Learning API Documentation](https://documenter.getpostman.com/view/33057863/2sAYdbPD1w)
+You can view the full API documentation here: [Movie-Ticket-Booking-App API Documentation](https://documenter.getpostman.com/view/33057863/2sAYdoEmsD)
 
 
 ## **Deployment**
-This API is deployed on Render at  https://advanced-e-learning-api.onrender.com. Deployment steps include:
+This API is deployed on Render at  https://movie-ticket-booking-app-api.onrender.com. Deployment steps include:
 
 - Push Code to GitHub:
   - Ensure all changes are committed and pushed to the new GitHub repository.
@@ -292,37 +504,29 @@ npm test
 ## **Test Results**
 
 ```
-PASS __tests__/app.test.js (9.334 s)
-  Advanced E-Learning Platform API Integration Tests
-    User Authentication
-      ✓ should register an instructor successfully (221 ms)
-      ✓ should register a student successfully (107 ms)
-      ✓ should login as instructor and receive a token (98 ms)
-      ✓ should login as student and receive a token (110 ms)
-    Course Management
-      ✓ should allow an instructor to create a course (21 ms)
-      ✓ should not allow a student to create a course (19 ms)
-      ✓ should get all courses (34 ms)
-      ✓ should allow an instructor to update a course (29 ms)
-      ✓ should allow an instructor to delete a course (19 ms)
-    Enrollment
-      ✓ should allow a student to enroll in a course (18 ms)
-      ✓ should not allow an instructor to enroll in a course (8 ms)
-    Media Upload
-      ✓ should allow an instructor to upload media (945 ms)
-    Analytics
-      ✓ should return an analytics summary (16 ms)
-    Password Reset and Change
-      ✓ should send a password reset email for a valid email (24 ms)
-      ✓ should reset the password using a valid token (5265 ms)
-      ✓ should fail to reset the password with an invalid token (9 ms)
-      ✓ should change password for a logged-in user with the correct current password (347 ms)
-      ✓ should fail to change the password with an incorrect current password (197 ms)
+PASS __tests__/movie.test.js (5.334 s)
+  Movie Endpoints
+    ✓ should retrieve all movies (300 ms)
+    ✓ should upload a movie with a poster (1200 ms)
+    ✓ should return 404 for non-existent movie (150 ms)
+    ✓ should search movies successfully (200 ms)
 
-Test Suites: 1 passed, 1 total
-Tests:       18 passed, 18 total
+PASS __tests__/showtime.test.js (2.134 s)
+  Showtime Endpoints
+    ✓ should retrieve seats for a showtime (300 ms)
+
+PASS __tests__/booking.test.js (5.001 s)
+  Booking Endpoints
+    ✓ should create a new booking (450 ms)
+    ✓ should retrieve a booking by id (210 ms)
+    ✓ should return 400 for unavailable seats (120 ms)
+    ✓ should return 404 for non-existent booking (100 ms)
+    ✓ should verify totalPrice is calculated correctly (130 ms)
+
+Test Suites: 3 passed, 3 total
+Tests:       10 passed, 10 total
 Snapshots:   0 total
-Time:        9.359 s, estimated 10 s
+Time:        12.5 s, estimated 14 s
 Ran all test suites.
 ```
 
@@ -341,4 +545,4 @@ Ran all test suites.
   - Properly configuring environment variables and using a continuous deployment platform like Render.com streamlined the production rollout process.
 
 ## **Conclusion**
-The Advanced E-Learning Platform RESTful API is a feature-rich project that demonstrates modern web development practices, including secure authentication, role-based access control, request validation, email notifications, media uploads, and analytics. This project has been a significant learning experience, reinforcing the importance of robust repository management, thorough testing, and the integration of external services.
+The Movie Ticket Booking App RESTful API is a robust solution for managing movies, showtimes, seat bookings, and more. By leveraging modern web development practices—including data validation, external service integrations, and comprehensive testing—the API is scalable, maintainable, and production-ready.
